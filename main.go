@@ -8,6 +8,7 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/kuokuanyu/SlotJackpot/db"
+	"github.com/kuokuanyu/SlotJackpot/handler"
 )
 
 // build容器: docker build -t a167829435/SlotJackpot-app:latest .
@@ -29,7 +30,7 @@ func main() {
 
 	// 設置 API 路由
 	r := gin.Default()
-	// r.GET("/ping", handler.Ping)
+	r.GET("/ping", handler.Ping)
 	// 其他 API ...
 
 	port := os.Getenv("PORT")
