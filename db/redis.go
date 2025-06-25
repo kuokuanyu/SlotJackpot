@@ -19,6 +19,9 @@ func InitRedis() {
 		DB:       0,
 	})
 
+	// time.Sleep(30 * time.Second)
+	log.Println("🔗 正在連線到 Redis...")
+
 	_, err := Redis.Ping(Ctx).Result()
 	if err != nil {
 		log.Fatalf("Redis 連線失敗: %v", err)
