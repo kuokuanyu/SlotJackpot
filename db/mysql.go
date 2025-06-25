@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -18,6 +19,9 @@ func InitMySQL() {
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_NAME"))
+
+	time.Sleep(3 * time.Second)
+	log.Println("🔗 正在連線到 MySQL...")
 
 	var err error
 	MySQL, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})

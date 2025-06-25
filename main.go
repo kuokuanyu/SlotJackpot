@@ -11,10 +11,12 @@ import (
 	"github.com/kuokuanyu/SlotJackpot/handler"
 )
 
-// build容器: docker build -t a167829435/SlotJackpot-app:latest .
-// 啟動容器: docker run -d --name SlotJackpot-container  --env-file .env -p 8080:8080 a167829435/SlotJackpot-app:latest
+// build容器: docker build -t a167829435/slotjackpot-app:latest .
+// 啟動容器(背景): docker run -d --name SlotJackpot-container  --env-file .env -p 8080:8080 a167829435/slotjackpot-app:latest
+// 啟動容器(直接執行，修改mysql.redis host參數): docker run --name SlotJackpot-container  --env-file .env -e DB_HOST=host.docker.internal -e REDIS_HOST=host.docker.internal -p 8080:8080 a167829435/slotjackpot-app:latest
 // 停止容器: docker stop SlotJackpot-container
 // 移除容器: docker rm SlotJackpot-container
+// docker compose執行: docker-compose up --build
 func init() {
 	log.Println("🔧 初始化應用程式...")
 
@@ -23,6 +25,7 @@ func init() {
 }
 
 func main() {
+	log.Println(os.Getenv("DB_HOST"), os.Getenv("REDIS_HOST"))
 
 	// 初始化 MySQL 與 Redis
 	db.InitMySQL()

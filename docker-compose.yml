@@ -1,0 +1,44 @@
+version: '3.8'  # 使用 Docker Compose 的版本 3.8，支援最新版功能
+
+services:  # 定義所有要建立的服務容器
+  mysql:  # MySQL 資料庫服務
+    image: mysql:8.0  # 使用官方的 mysql 8.0 映像檔
+    container_name: mysql  # 指定容器名稱為 mysql
+    restart: always  # 如果容器當掉會自動重啟
+    environment:  # 設定環境變數（MySQL 啟動初始化所需）
+      MYSQL_ROOT_PASSWORD: asdf4440  # MySQL root 帳號密碼
+      MYSQL_DATABASE: slot  # 初始化建立一個資料庫
+    ports:
+      - "3306:3306"  # 將主機的 3306 port 映射到容器的 3306 port
+    volumes:
+      - mysql_data:/var/lib/mysql  # 使用 volume 儲存 MySQL 資料庫資料
+
+  redis:  # Redis 快取服務
+    image: redis:7.2  # 使用 redis 7.2 官方映像
+    container_name: redis  # 指定容器名稱為 redis
+    restart: always  # 當容器停止時自動重啟
+    ports:
+      - "6379:6379"  # 將主機的 6379 port 映射給容器的 Redis 服務
+
+  app:  # 你的 Golang 應用服務
+    build: # 使用 Dockerfile 自動建構映像
+      context: .  # Dockerfile 所在的目錄，也就是目前這層
+      dockerfile: Dockerfile  # 指定使用的 Dockerfile（可省略，預設就是）
+    environment:
+      - DB_HOST=host.docker.internal
+      - REDIS_HOST=host.docker.internal
+      # - DB_HOST=mysql
+      # - REDIS_HOST=redis
+    container_name: SlotJackpot-container  # 指定此容器的名稱
+    depends_on:  # 表示此服務啟動前要先啟動以下服務
+      - mysql
+      - redis
+    ports:
+      - "8080:8080"  # 將主機的 .env PORT（預設8080）對應容器內的 8080
+    env_file:
+      - .env  # 從 `.env` 檔案載入環境變數（如資料庫設定、PORT 等）
+    volumes:
+      - .:/app  # 將本機目錄掛載進容器內部的 /app（熱重載、開發方便）
+
+volumes:  # 定義永久儲存的 volume（避免 MySQL 資料因容器刪除而消失）
+  mysql_data:
