@@ -13,7 +13,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var i = 1
+// var i = 1
 
 // SlotHandler 處理slot遊戲的抽獎請求
 func SlotHandler(mysql *gorm.DB, redis *redis.Client) gin.HandlerFunc {
@@ -55,7 +55,7 @@ func SlotHandler(mysql *gorm.DB, redis *redis.Client) gin.HandlerFunc {
 			"win_lines": lineResults,
 		})
 
-		i++ // 增加 i 的值，確保每次請求都有唯一的 key
+		// i++ // 增加 i 的值，確保每次請求都有唯一的 key
 	}
 }
 
