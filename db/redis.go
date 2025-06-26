@@ -12,7 +12,7 @@ import (
 var Redis *redis.Client
 var Ctx = context.Background()
 
-func InitRedis() {
+func InitRedis() *redis.Client {
 	Redis = redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT")),
 		Password: os.Getenv("REDIS_PASSWORD"),
@@ -28,4 +28,6 @@ func InitRedis() {
 	}
 
 	log.Println("✅ Redis 已連線")
+
+	return Redis
 }

@@ -12,7 +12,7 @@ import (
 
 var MySQL *gorm.DB
 
-func InitMySQL() {
+func InitMySQL() *gorm.DB {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
@@ -20,7 +20,7 @@ func InitMySQL() {
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_NAME"))
 
-	time.Sleep(3 * time.Second)
+	time.Sleep(1 * time.Second)
 	log.Println("🔗 正在連線到 MySQL...")
 
 	var err error
@@ -30,4 +30,6 @@ func InitMySQL() {
 	}
 
 	log.Println("✅ MySQL 已連線")
+
+	return MySQL
 }

@@ -28,13 +28,14 @@ func main() {
 	log.Println(os.Getenv("DB_HOST"), os.Getenv("REDIS_HOST"))
 
 	// 初始化 MySQL 與 Redis
-	db.InitMySQL()
-	db.InitRedis()
+	mysql := db.InitMySQL()
+	redis := db.InitRedis()
 
 	// 設置 API 路由
 	r := gin.Default()
 	r.GET("/ping", handler.Ping)
 	// 其他 API ...
+	r.GET("/slot", handler.SlotHandler(mysql, redis))
 
 	port := os.Getenv("PORT")
 	r.Run(":" + port) // 監聽 PORT
