@@ -1,0 +1,48 @@
+name: Go CI
+
+on:
+  push:
+    branches: [ "*" ]   # 所有分支推送都會觸發
+  pull_request:
+    branches: [ "*" ]   # 所有 PR 也會觸發
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ 取出 GitHub Repo 原始碼
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2️⃣ 安裝 Go
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'       # 設定 Go 版本，依你的專案版本調整
+
+      # 3️⃣ 快取 Go modules 加快速度（可選）
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      # 4️⃣ 安裝相依套件
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Run tests in slot folder
+        run: |
+          cd slot                   # 切換到 slot 資料夾
+          go test -v ./...          # 執行該目錄底下所有測試，-v 顯示詳細執行紀錄
+
+      - name: Run tests in handler folder
+        run: |
+          cd handler                   # 切換到 handler 資料夾
+          go test -v ./...          # 執行該目錄底下所有測試，-v 顯示詳細執行紀錄
+
